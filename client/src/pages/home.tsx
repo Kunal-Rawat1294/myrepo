@@ -1,22 +1,43 @@
 import React, { useState } from 'react';
+import { Link } from 'wouter';
 import { CountryWheel } from '../components/CountryWheel';
 import { CountryDisplay } from '../components/CountryDisplay';
+import { ReviewForm } from '../components/ReviewForm';
+import { ReviewList } from '../components/ReviewList';
 import { useCountryData } from '../hooks/useCountryData';
+import { useAuth } from '../hooks/useAuth';
 import { Country } from '../types/country';
 import { Card, CardContent } from '@/components/ui/card';
-import { AlertCircle, Globe } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { AlertCircle, Globe, User, LogOut, Settings } from 'lucide-react';
 
 export default function Home() {
   const { data: countries, isLoading, error } = useCountryData();
+  const { user, isAuthenticated } = useAuth();
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
+  const [showReviews, setShowReviews] = useState(false);
 
   const handleCountrySelect = (country: Country) => {
     setSelectedCountry(country);
+    setShowReviews(false);
   };
 
   const handleDiscoverAnother = () => {
     setSelectedCountry(null);
+    setShowReviews(false);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleReviewSubmitted = () => {
+    setShowReviews(true);
+  };
+
+  const getInitials = (user: any) => {
+    const first = user?.firstName?.[0] || "";
+    const last = user?.lastName?.[0] || "";
+    return (first + last).toUpperCase() || user?.username?.[0]?.toUpperCase() || "U";
   };
 
   if (error) {
@@ -47,8 +68,50 @@ export default function Home() {
               <Globe className="text-3xl text-blue-600" />
               <h1 className="text-2xl font-bold text-gray-900">Explore The World</h1>
             </div>
-            <div className="hidden sm:flex items-center space-x-4">
-              <span className="text-sm text-gray-600">Discover. Learn. Explore.</span>
+            <div className="flex items-center space-x-4">
+              <span className="hidden sm:block text-sm text-gray-600">Discover. Learn. Explore.</span>
+              {isAuthenticated && user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+                      <Avatar className="h-10 w-10">
+                        <AvatarImage src={user.profileImageUrl || ""} />
+                        <AvatarFallback>{getInitials(user)}</AvatarFallback>
+                      </Avatar>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    <div className="flex items-center justify-start gap-2 p-2">
+                      <div className="flex flex-col space-y-1 leading-none">
+                        <p className="font-medium">
+                          {user.firstName || user.lastName 
+                            ? `${user.firstName || ""} ${user.lastName || ""}`.trim()
+                            : user.username || "Explorer"}
+                        </p>
+                        {user.email && (
+                          <p className="w-[200px] truncate text-sm text-muted-foreground">
+                            {user.email}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <DropdownMenuItem asChild>
+                      <Link href={`/profile/${user.id}`}>
+                        <User className="mr-2 h-4 w-4" />
+                        <span>Profile</span>
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => window.location.href = '/api/logout'}>
+                      <LogOut className="mr-2 h-4 w-4" />
+                      <span>Log out</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <Button onClick={() => window.location.href = '/api/login'}>
+                  Sign In
+                </Button>
+              )}
             </div>
           </div>
         </div>
@@ -77,10 +140,23 @@ export default function Home() {
 
         {/* Country Display */}
         {selectedCountry && (
-          <CountryDisplay
-            country={selectedCountry}
-            onDiscoverAnother={handleDiscoverAnother}
-          />
+          <>
+            <CountryDisplay
+              country={selectedCountry}
+              onDiscoverAnother={handleDiscoverAnother}
+            />
+            
+            {/* Reviews Section */}
+            <div className="mt-8 space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <ReviewForm 
+                  country={selectedCountry}
+                  onReviewSubmitted={handleReviewSubmitted}
+                />
+                <ReviewList country={selectedCountry} />
+              </div>
+            </div>
+          </>
         )}
       </main>
 
@@ -125,6 +201,7 @@ export default function Home() {
                 <li>Random Country Discovery</li>
                 <li>Cultural Information</li>
                 <li>Beautiful Image Galleries</li>
+                <li>User Reviews & Profiles</li>
                 <li>Interactive Learning</li>
               </ul>
             </div>

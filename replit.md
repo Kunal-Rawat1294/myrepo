@@ -58,14 +58,22 @@ Preferred communication style: Simple, everyday language.
 1. **Random Country Selection**: Algorithm to randomly select from all available countries
 2. **Country Information Display**: Structured presentation of country data
 3. **Image Galleries**: Dynamic image loading with fallback handling
-4. **Responsive Design**: Mobile-first approach with Tailwind CSS
-5. **Loading States**: Skeleton components and loading indicators
-6. **Error Handling**: Graceful error states with user-friendly messages
+4. **User Authentication**: Replit Auth integration for secure user management
+5. **User Profiles**: Comprehensive profile system with public/private settings
+6. **Review System**: Country reviews with ratings, anonymous posting options
+7. **Responsive Design**: Mobile-first approach with Tailwind CSS
+8. **Loading States**: Skeleton components and loading indicators
+9. **Error Handling**: Graceful error states with user-friendly messages
 
 ### UI Components
 - **CountryDisplay**: Main component showing country information
 - **CountryWheel**: Interactive country selection interface
 - **ImageGallery**: Reusable image grid component
+- **ReviewForm**: Component for users to submit country reviews with ratings
+- **ReviewList**: Component displaying community reviews for countries
+- **Profile**: Comprehensive user profile management interface
+- **Landing**: Welcome page for non-authenticated users
+- **Authentication Components**: Login/logout integration with Replit Auth
 - **Custom UI Components**: Extensive shadcn/ui component library
 
 ## Data Flow
