@@ -9,6 +9,8 @@ interface ImageGalleryProps {
   title: string;
   icon: React.ReactNode;
   gridCols?: string;
+  description?: string;
+  isDescriptionLoading?: boolean;
 }
 
 export const ImageGallery: React.FC<ImageGalleryProps> = ({
@@ -17,7 +19,9 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({
   error,
   title,
   icon,
-  gridCols = "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+  gridCols = "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
+  description,
+  isDescriptionLoading = false
 }) => {
   if (isLoading) {
     return (
@@ -51,9 +55,22 @@ export const ImageGallery: React.FC<ImageGalleryProps> = ({
 
   return (
     <div className="bg-white rounded-xl shadow-lg p-6">
-      <div className="flex items-center mb-6">
-        {icon}
-        <h3 className="text-2xl font-semibold text-gray-900">{title}</h3>
+      <div className="mb-6">
+        <div className="flex items-center mb-3">
+          {icon}
+          <h3 className="text-2xl font-semibold text-gray-900">{title}</h3>
+        </div>
+        {/* AI-Generated Description */}
+        {isDescriptionLoading ? (
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-3/4" />
+          </div>
+        ) : description && (
+          <p className="text-gray-600 leading-relaxed text-sm bg-gray-50 p-4 rounded-lg border-l-4 border-blue-200">
+            {description}
+          </p>
+        )}
       </div>
       
       <div className={`grid ${gridCols} gap-4`}>

@@ -1,6 +1,7 @@
 import React from 'react';
 import { Country } from '../types/country';
 import { useWikipediaSummary, useCountryImages } from '../hooks/useCountryData';
+import { useAIDescriptions } from '../hooks/useAIDescriptions';
 import { ImageGallery } from './ImageGallery';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -31,6 +32,9 @@ export const CountryDisplay: React.FC<CountryDisplayProps> = ({
 }) => {
   const { data: wikipediaSummary, isLoading: isWikipediaLoading, error: wikipediaError } = 
     useWikipediaSummary(country.name.common);
+  
+  const { data: aiDescriptions, isLoading: isAILoading, error: aiError } = 
+    useAIDescriptions(country.name.common);
   
   const { data: landmarkImages, isLoading: isLandmarksLoading, error: landmarksError } = 
     useCountryImages(country.name.common, 'landmarks');
@@ -232,6 +236,8 @@ export const CountryDisplay: React.FC<CountryDisplayProps> = ({
           title="Famous Landmarks"
           icon={<Landmark className="text-blue-600 text-2xl mr-3" />}
           gridCols="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+          description={aiDescriptions?.landmarks}
+          isDescriptionLoading={isAILoading}
         />
 
         <ImageGallery
@@ -241,6 +247,8 @@ export const CountryDisplay: React.FC<CountryDisplayProps> = ({
           title="Traditional Cuisine"
           icon={<Utensils className="text-emerald-600 text-2xl mr-3" />}
           gridCols="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4"
+          description={aiDescriptions?.cuisine}
+          isDescriptionLoading={isAILoading}
         />
 
         <ImageGallery
@@ -250,6 +258,8 @@ export const CountryDisplay: React.FC<CountryDisplayProps> = ({
           title="Cultural Highlights"
           icon={<Palette className="text-purple-600 text-2xl mr-3" />}
           gridCols="grid-cols-1 md:grid-cols-2"
+          description={aiDescriptions?.culture}
+          isDescriptionLoading={isAILoading}
         />
       </div>
 

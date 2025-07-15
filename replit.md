@@ -36,9 +36,10 @@ Preferred communication style: Simple, everyday language.
 ## Key Components
 
 ### External API Integrations
-1. **REST Countries API** (`https://restcountries.com/v3.1/all`)
+1. **REST Countries API** (`https://restcountries.com/v3.1/independent?status=true`)
    - Fetches comprehensive country data including flags, population, capital, languages
    - Provides Google Maps integration links
+   - Includes fallback endpoints and sample data for reliability
 
 2. **Wikipedia REST API** (`https://en.wikipedia.org/api/rest_v1/page/summary/{country}`)
    - Retrieves educational summaries about countries
@@ -46,6 +47,11 @@ Preferred communication style: Simple, everyday language.
 
 3. **Unsplash API** (`https://api.unsplash.com/search/photos`)
    - Fetches high-quality images for landmarks, food, and culture
+   - Requires API key configuration via environment variables
+
+4. **OpenAI API** (`gpt-4o` model)
+   - Generates detailed, engaging descriptions for landmarks, cuisine, and cultural highlights
+   - Provides rich educational content to complement images
    - Requires API key configuration via environment variables
 
 ### Core Features
@@ -82,6 +88,10 @@ Preferred communication style: Simple, everyday language.
 - **Unsplash Access Key**: Required for image fetching
   - Environment variable: `VITE_UNSPLASH_ACCESS_KEY`
   - Fallback environment variables supported
+
+- **OpenAI API Key**: Required for AI-generated descriptions
+  - Environment variable: `OPENAI_API_KEY`
+  - Used to generate detailed descriptions for landmarks, cuisine, and culture
 
 ### Database Configuration
 - **PostgreSQL**: Database URL required via `DATABASE_URL` environment variable
